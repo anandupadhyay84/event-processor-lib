@@ -203,12 +203,11 @@ Where:
 
 ## Assumptions
 
-1. Stream is finite but potentially large  
-2. Event id is non-null  
-3. Timestamp is epoch milliseconds  
-4. Duplicate = same id + timestamp  
-5. First occurrence is retained  
-6. NaN and negative values are considered invalid  
+1. Stream is finite but potentially large    
+2. Timestamp is epoch milliseconds  
+3. Duplicate = same id + timestamp  
+4. First occurrence is retained  
+5. NaN and negative values are considered invalid  
 
 ---
 
