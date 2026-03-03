@@ -109,7 +109,7 @@ Map<String, AggregationResult> result =
         EventAggregator.aggregate(events.parallel());
 ```
 
-### Architectural Rationale
+### Architecture Overview & Decisions
 
 The library does not internally enforce parallel execution.  
 Instead, it allows the caller to decide whether to process sequentially or in parallel.
@@ -160,7 +160,13 @@ Where:
 
 This trade-off is unavoidable for exact deduplication.
 
-For unbounded streams or extremely high-cardinality workloads, alternative approaches would be required:
+Estimated impact at scale:
+
+- **~10 million unique events** → Manageable with sufficient JVM heap (e.g., 2–4GB)
+- **~100 million unique events** → High memory pressure
+- **~1 billion unique events** → Likely to cause `OutOfMemoryError`
+
+For unbounded streams or extremely high workloads, alternative approaches would be required:
 
 - Time-bounded deduplication (sliding window)
 - Probabilistic data structures (e.g., Bloom filters)
@@ -203,7 +209,7 @@ Where:
 
 ## Assumptions
 
-1. Stream is finite but potentially large    
+1. Stream is finite but potentially large (Current Solution can handle upt 10M records easily and upto 100M records with increase in heap size).
 2. Timestamp is epoch milliseconds  
 3. Duplicate = same id + timestamp  
 4. First occurrence is retained  
