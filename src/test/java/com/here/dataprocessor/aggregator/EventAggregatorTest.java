@@ -284,4 +284,29 @@ class EventAggregatorTest {
         assertThat(stats.getCount()).isEqualTo(3);
         assertThat(stats.getMean()).isEqualTo(20.0);
     }
+
+
+    @Test
+    @DisplayName("Stream aggregation should match incremental accumulate aggregation")
+    void streamAggregationShouldMatchAccumulateAggregation() {
+
+        List<Event> events = List.of(
+        new Event("sensor-1", 1000L, 10.0),
+        new Event("sensor-1", 2000L, 20.0),
+        new Event("sensor-1", 3000L, 30.0)
+        );
+
+        AggregationResult streamResult =
+        EventAggregator.aggregate(events.stream()).get("sensor-1");
+
+        AggregationResult manual =
+        AggregationResult.empty()
+                        .accumulate(1000L, 10.0)
+                        .accumulate(2000L, 20.0)
+                        .accumulate(3000L, 30.0);
+
+        assertThat(streamResult).isEqualTo(manual);
+
+        }
+        
 }

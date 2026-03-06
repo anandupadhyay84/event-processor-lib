@@ -23,7 +23,7 @@ It is designed to handle:
 - **Thread-safe** — Concurrent aggregation using `ConcurrentHashMap`
 - **Parallel-ready** — Optimized for parallel stream execution
 - **Memory-efficient** — O(k + d) space complexity
-- **Numerically stable** — Incremental mean calculation (Welford-style incremental mean update)
+- **Numerically stable** — Accurate mean calculation using weighted mean for parallel aggregation
 - **Well-tested** — Comprehensive test suite with edge case coverage
 - **Modern Java** — Uses Java 17+ features (records, pattern matching, streams)
 
@@ -178,13 +178,13 @@ This implementation assumes a finite stream as defined in the assignment.
 
 ### Numerical Stability
 
-Mean calculation uses an incremental update formula:
+Mean calculation is performed using a weighted mean aggregation formula when combining partial results.
 
 ```
-newMean = oldMean + (value - oldMean) / newCount
+combinedMean = (left.count * left.mean + right.count * right.mean) / combinedCount
 ```
 
-This minimizes floating-point precision loss in large datasets.
+This approach avoids recomputing the mean from raw values and maintains numerical stability when handling large datasets.
 
 ---
 
